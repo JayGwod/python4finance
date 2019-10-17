@@ -55,4 +55,4 @@ def get_data_from_yahoo(reload_sp500=False):
         else:
             print('Already have {}'.format(ticker))
 
-get_data_from_yahoo(True)
+get_data_from_yahoo()
