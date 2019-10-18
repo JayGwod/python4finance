@@ -79,5 +79,5 @@ def compile_data():
     print(main_df.head())
     main_df.to_csv('sp500_joined_closes.csv')
 
-get_data_from_yahoo(True)
+get_data_from_yahoo()
 compile_data()
