@@ -23,7 +23,7 @@ def save_sp500_tickers():
     tickers = []
 
     for row in table.findAll('tr')[1:]:
-        ticker = row.findAll('td')[0].text
+        ticker = row.findAll('td')[0].text.replace('.', '-')
         tickers.append(ticker.strip())
 
     with open('sp500tickers.pickle', 'wb') as f:
@@ -44,8 +44,8 @@ def get_data_from_yahoo(reload_sp500=False):
     if not os.path.exists('stock_dfs'):
         os.makedirs('stock_dfs')
 
-    start = dt.datetime(2000,1,1)
-    end = dt.datetime(2016,12,31)
+    start = dt.datetime(2019,6,8)
+    end = dt.datetime.now()
 
     for ticker in tickers:
         print(ticker)
@@ -61,9 +61,23 @@ def compile_data():
 
     main_df = pd.DataFrame()
 
-    for count,ticker in enumerate(tickers):
+    for count, ticker in enumerate(tickers):
         df = pd.read_csv('stock_dfs/{}.csv'.format(ticker))
-        df.set_index('Data', inplace=True)
+        df.set_index('Date', inplace=True)
 
-        df.rename(columns={'Adj Close', ticker}, inplace=True)
-        df.drop()
+        df.rename(columns={'Adj Close': ticker}, inplace=True)
+        df.drop(['Open', 'Close', 'High', 'Low', 'Volume'], 1, inplace=True)
+
+        if main_df.empty:
+            main_df = df
+        else:
+            main_df = main_df.join(df, how='outer')
+
+        if count % 10 == 0:
+            print(count)
+
+    print(main_df.head())
+    main_df.to_csv('sp500_joined_closes.csv')
+
+get_data_from_yahoo(True)
+compile_data()
