@@ -109,10 +109,10 @@ def visualize_data():
     ax.xaxis.tick_top()
 
 
-    column_lables = df_corr.columns
+    column_labels = df_corr.columns
     row_labels = df_corr.index
 
-    ax.set_xticklabels(column_lables)
+    ax.set_xticklabels(column_labels)
     ax.set_yticklabels(row_labels)
     plt.xticks(rotation=90)
     heatmap.set_clim(-1, 1)
