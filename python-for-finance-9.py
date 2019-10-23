@@ -7,16 +7,10 @@
 """
 Preprocessing data for Machine Learning - Python Programming for Finance p. 9
 """
-import datetime as dt
-import os
 import pickle
-
-import bs4 as bs
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import pandas_datareader.data as web
-import requests
-from matplotlib import style
 
-style.use('ggplot')
+def process_data_for_labels(ticker):
+    hm_days = 7
+    df = pd.read_csv('sp500_joined_closes.csv', index_col=0)
