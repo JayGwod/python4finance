@@ -5,7 +5,7 @@
 #
 # Distributed under terms of the MIT license.
 """
-Preprocessing data for Machine Learning - Python Programming for Finance p. 9
+Creating machine learning target function - Python Programming for Finance p. 10
 """
 import pickle
 import numpy as np
@@ -23,4 +23,12 @@ def process_data_for_labels(ticker):
     df.fillna(0, inplace=True)
     return tickers, df
 
-process_data_for_labels('XOM')
+def buy_sell_hold(*args):
+    cols = [c for c in args]
+    requirment = 0.02
+    for col in cols:
+        if col > requirment:
+            return 1
+        if col < -requirment:
+            return -1
+    return 0
