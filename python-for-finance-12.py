@@ -5,13 +5,16 @@
 #
 # Distributed under terms of the MIT license.
 """
-Creating labels for Machine Learning - Python Programming for Finance p. 11
+Machine learning - Python Programming for Finance p. 12
 """
 import pickle
 from collections import Counter
 
 import numpy as np
 import pandas as pd
+from sklearn import model_selection as cross_validation
+from sklearn import neighbors, svm
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 
 
 def process_data_for_labels(ticker):
@@ -70,4 +73,23 @@ def extract_featuresets(ticker):
     return X, y, df
 
 
-extract_featuresets('XOM')
+def do_ml(ticker):
+    X, y, df = extract_featuresets(ticker)
+
+    X_train, X_test, y_train, y_test = cross_validation.train_test_split(
+        X, y, test_size=0.25)
+
+    clf = VotingClassifier([('lsvc', svm.LinearSVC()),
+                            ('knn', neighbors.KNeighborsClassifier()),
+                            ('rfor', RandomForestClassifier())])
+
+    clf.fit(X_train, y_train)
+    confidence = clf.score(X_test, y_test)
+    print('Accuracy', confidence)
+    predictions = clf.predict(X_test)
+    print('Predicted spread:', Counter(predictions))
+
+    return confidence
+
+
+do_ml('BAC')
